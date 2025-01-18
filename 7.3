@@ -1,1 +1,42 @@
+class WordsFinder:
+    def __init__(self, *names):
+        self.names = names
 
+    def get_all_words(self):
+        all_words = {}
+        for file in self.names:
+            with open(file, 'r', encoding='utf-8') as result:
+                strings = result.read().lower()
+                for punctuation in [',', '.', '=', '!', '?', ';', ':', ' - ']:
+                    strings = strings.replace(punctuation, '')
+                    words = strings.split()
+                    all_words[file] = words
+        return all_words
+
+    def find(self, word):
+        find_word = {}
+        for file, words in self.get_all_words().items():
+            if word.lower() in words:
+                find_word[file] = words.index(word.lower()) + 1
+        return find_word
+
+
+
+    def count(self, word):
+        count_word = {}
+        for file, words in self.get_all_words().items():
+            if word.lower() in words:
+                count_word[file] = words.count(word.lower())
+        return count_word
+
+finder2 = WordsFinder('test_file.txt')
+print(finder2.get_all_words())
+print(finder2.find('TEXT'))
+print(finder2.count('teXT'))
+
+finder1 = WordsFinder('Walt Whitman - O Captain! My Captain!.txt',
+                      'Rudyard Kipling - If.txt',
+                      'Mother Goose - Monday’s Child.txt')
+print(finder1.get_all_words())
+print(finder1.find('the'))
+print(finder1.count('the'))
